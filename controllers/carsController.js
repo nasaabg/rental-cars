@@ -1,7 +1,15 @@
 var Car = require('../models/car')
 
+var async = require('async')
+
 exports.index = function (req, res) {
-  res.send('NOT IMPLEMENTED: Site Home Page')
+  async.parallel({
+    carsCount: function (callback) {
+      Car.count({}, callback)
+    }
+  }, function (err, results) {
+    res.render('index', { title: 'Car rental Home', error: err, data: results })
+  })
 }
 
 exports.car_list = function (req, res) {

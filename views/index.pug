@@ -1,5 +1,14 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div.container
+      h1= title
+      p Welcome to #[em Rental - Cars], a very basic Express websits.
+
+      if error
+        p Error getting dynamic content.
+      else
+        p We have has the following record counts:
+
+        ul
+          li #[strong Cars:] !{data.carsCount}
