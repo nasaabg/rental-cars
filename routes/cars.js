@@ -20,6 +20,6 @@ router.post('/cars/:id/update', carsController.car_update_post)
 router.get('/cars/:id', carsController.car_detail)
 
 // GET request for list of all Car items.
-router.get('/cars', carsController.car_list)
+router.get('/cars', carsController.cars_list)
 
 module.exports = router

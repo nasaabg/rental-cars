@@ -12,8 +12,12 @@ exports.index = function (req, res) {
   })
 }
 
-exports.car_list = function (req, res) {
-  res.send('NOT IMPLEMENTED: Cars list')
+exports.cars_list = function (req, res, next) {
+  Car.find({}, 'name model car_type')
+    .exec(function (err, carsList) {
+      if (err) { return next(err) }
+      res.render('cars_list', { title: 'Cars List', carsList: carsList })
+    })
 }
 
 exports.car_detail = function (req, res) {

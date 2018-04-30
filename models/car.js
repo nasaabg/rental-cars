@@ -15,7 +15,7 @@ var CarSchema = new Schema(
 CarSchema
   .virtual('url')
   .get(function () {
-    return '/catalog/car/' + this._id
+    return '/cars/' + this._id
   })
 
 // Export model

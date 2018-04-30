@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1= title
+
+    ul
+    each car in carsList
+        li
+            a(href=car.url) #{car.name}
+            |  (#{car.model})
+
+    else
+        li There are no books.
