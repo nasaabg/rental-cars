@@ -1,14 +1,16 @@
 extends layout
+append styles
+    .jumbotron
+        .container
+            h1 Let’s find your ideal car
+            p
+                | This is a very nice app to rent a cars. Just check available cars and rent with one click.
 
-block content
-  div.container
-      h1= title
-      p Welcome to #[em Rental - Cars], a very basic Express websits.
-
-      if error
-        p Error getting dynamic content.
-      else
-        p We have has the following record counts:
-
-        ul
-          li #[strong Cars:] !{data.carsCount}
+            form(method='GET' action='/cars')
+                div.form-group.col-md-3
+                    label(for='start_date') Start date:
+                    input#start_date.form-control(type='date' name='start_date' value='')
+                div.form-group.col-md-3
+                    label(for='end_date') End date:
+                    input#end_date.form-control(type='date' name='end_date' value='')
+                button.btn.btn-primary(type='submit') Find cars

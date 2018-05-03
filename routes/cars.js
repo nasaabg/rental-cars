@@ -10,6 +10,8 @@ router.get('/', carsController.index)
 // POST request for creating Car.
 router.post('/cars', carsController.car_create_post)
 
+router.post('/cars/:id/reservation', carsController.car_reservation_post)
+
 // POST request to delete Car.
 router.post('/cars/:id/delete', carsController.car_delete_post)
 

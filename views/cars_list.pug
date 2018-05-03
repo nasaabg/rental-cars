@@ -1,13 +1,26 @@
 extends layout
 
 block content
-    h1= title
+    .container
+        h3 Cars available from: #{startDate} to #{endDate}
+    .container
+        .row
+        each car in cars
+            .col-md-4
+                h4 Name: #{car.name}
+                h4 Model: #{car.model}
+                hr
+                h4 Vin number: #{car.vin_number}
+                h4 Price per day: $#{car.price_day}
+                hr
+                h4 Final price: $#{car.price_day * days} for #{days} days.
+                p
+                    | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                p
 
-    ul
-    each car in carsList
-        li
-            a(href=car.url) #{car.name}
-            |  (#{car.model})
+                form(method='POST' action=car.reservation_url)
+                    input#start_date.form-control(type='hidden' name='start_date' value=startDate)
+                    input#end_date.form-control(type='hidden' name='end_date' value=endDate)
 
-    else
-        li There are no books.
+                    button.btn.btn-default(type='submit') Book now!
+

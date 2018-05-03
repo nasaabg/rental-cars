@@ -11,7 +11,7 @@ if (!userArgs[0].startsWith('mongodb://')) {
 var async = require('async')
 var Car = require('./models/car')
 var CarType = require('./models/cartype')
-var CarInstance = require('./models/carinstance')
+var CarReservation = require('./models/carReservation')
 
 var mongoose = require('mongoose')
 var mongoDB = userArgs[0]
@@ -21,14 +21,16 @@ var db = mongoose.connection
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
 var cars = []
-var carinstances = []
-var cartypes = []
+var carReservations = []
+var carTypes = []
 
-function carCreate (name, model, car_type, description, cb) {
+function carCreate (name, model, priceDay, carType, vinNumber, description, cb) {
   const cardetail = {
     name: name,
     model: model,
-    car_type: car_type,
+    price_day: priceDay,
+    car_type: carType,
+    vin_number: vinNumber,
     description: description
   }
 
@@ -53,29 +55,29 @@ function carTypeCreate (name, description, cb) {
       return
     }
     console.log('New Car Type: ' + carType)
-    cartypes.push(carType)
+    carTypes.push(carType)
     cb(null, carType)
   })
 }
 
-function carInstanceCreate (car, status, due_back, price_day, vin_number, cb) {
-  const carinstancedetail = {
+function carReservationCreate (car, status, days, reservedFrom, reservedTo, cb) {
+  const reservationDetails = {
     car: car,
-    price_day: price_day,
-    vin_number: vin_number
+    status: status,
+    days: days,
+    reserved_from: reservedFrom,
+    reserved_to: reservedTo
   }
-  if (due_back != false) carinstancedetail.due_back = due_back
-  if (status != false) carinstancedetail.status = status
 
-  var carinstance = new CarInstance(carinstancedetail)
-  carinstance.save(function (err) {
+  var carReservation = new CarReservation(reservationDetails)
+  carReservation.save(function (err) {
     if (err) {
-      console.log('ERROR CREATING CarInstance: ' + carinstance)
+      console.log('ERROR CREATING CarReservation: ' + carReservation)
       cb(err, null)
       return
     }
-    console.log('New CarInstance: ' + carinstance)
-    carinstances.push(carinstance)
+    console.log('New CarInstance: ' + carReservation)
+    carReservations.push(carReservation)
     cb(null, car)
   })
 }
@@ -102,58 +104,57 @@ function createCarTypes (cb) {
 function createCars (cb) {
   async.parallel([
     function (callback) {
-      carCreate('Skoda', 'Fabia', [cartypes[0]], '', callback)
+      carCreate('Skoda', 'Fabia', 40, [carTypes[0]], '3312213231', '', callback)
     },
     function (callback) {
-      carCreate('Skoda', 'Octavia', [cartypes[0]], '', callback)
+      carCreate('Skoda', 'Octavia', 80, [carTypes[0]], '232231123', '', callback)
     },
     function (callback) {
-      carCreate('Skoda', 'Superb', [cartypes[1]], '', callback)
+      carCreate('Skoda', 'Superb', 100, [carTypes[1]], '5243232', '', callback)
     },
     function (callback) {
-      carCreate('BMW', 'X1', [cartypes[2]], '', callback)
+      carCreate('BMW', 'X1', 200, [carTypes[2]], '234142', '', callback)
     }
   ],
     // optional callback
   cb)
 }
 
-function createCarInstances (cb) {
+function createCarReservations (cb) {
   async.parallel([
     function (callback) {
-      carInstanceCreate(cars[0], 'Available', false, 20.5, '423314423', callback)
+      carReservationCreate(cars[0], 'Reserved', 9, '2018-05-01', '2018-05-10', callback)
     },
     function (callback) {
-      carInstanceCreate(cars[1], 'Available', false, 40.0, '2433434', callback)
+      carReservationCreate(cars[1], 'Reserved', 9, '2018-05-01', '2018-05-10', callback)
     },
     function (callback) {
-      carInstanceCreate(cars[2], 'Available', false, 40.0, '1323123', callback)
+      carReservationCreate(cars[2], 'Reserved', 9, '2018-05-01', '2018-05-10', callback)
     },
     function (callback) {
-      carInstanceCreate(cars[3], 'Available', false, 50.0, '54312', callback)
+      carReservationCreate(cars[3], 'Reserved', 9, '2018-05-01', '2018-05-10', callback)
     },
     function (callback) {
-      carInstanceCreate(cars[3], 'Available', false, 20.0, '231231231', callback)
+      carReservationCreate(cars[3], 'Reserved', 9, '2018-05-01', '2018-05-10', callback)
     },
     function (callback) {
-      carInstanceCreate(cars[3], 'Available', false, 250.0, '123312', callback)
+      carReservationCreate(cars[3], 'Reserved', 9, '2018-05-01', '2018-05-10', callback)
     }
   ],
-    // Optional callback
   cb)
 }
 
 async.series([
   createCarTypes,
   createCars,
-  createCarInstances
+  createCarReservations,
 ],
 // Optional callback
 function (err, results) {
   if (err) {
     console.log('FINAL ERR: ' + err)
   } else {
-    console.log('CARInstances: ' + carinstances)
+    console.log('reservations: ' + carReservations)
   }
   // All done, disconnect from database
   mongoose.connection.close()
