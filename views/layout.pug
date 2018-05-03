@@ -6,9 +6,21 @@ block body
     +navbar-fixed("Rental car","navbar","inverse")
         +nav_item("/","active") Home
         +nav_item("#") Contact
+        +nav_item("/reservations") My reservations
+        +nav_item.nav.navbar-nav.navbar-right
+        if (!user)
+            li
+                a(href='/login') Login
+            li
+                a(href='/register') Register
+        if (user)
+            li
+                a Welcome #{user.username}
+            li
+                a(href='/logout') Logout
     .container
         block content
 
         hr
         footer
-                p © Janek Kurzydło 2018
+            p © Janek Kurzydło 2018

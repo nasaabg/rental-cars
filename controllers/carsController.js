@@ -1,7 +1,6 @@
 var Car = require('../models/car')
 var CarReservation = require('../models/carReservation')
 var moment = require('moment')
-
 var async = require('async')
 
 exports.index = function (req, res, next) {
@@ -9,7 +8,7 @@ exports.index = function (req, res, next) {
     .limit(3)
     .exec(function (err, cars) {
       if (err) { return next(err) }
-      res.render('index', {cars: cars})
+      res.render('index', {cars: cars, user: req.user})
     })
 }
 
@@ -19,6 +18,7 @@ exports.cars_list = function (req, res, next) {
   var start = moment(startDate, 'YYYY-MM-DD')
   var end = moment(endDate, 'YYYY-MM-DD')
   const days = moment.duration(end.diff(start)).asDays()
+  console.log(req.user)
 
   Car.find({})
     .exec(function (err, cars) {
@@ -27,7 +27,8 @@ exports.cars_list = function (req, res, next) {
         cars: cars,
         startDate: startDate,
         endDate: endDate,
-        days: days
+        days: days,
+        user: req.user
       })
     })
 }
@@ -52,24 +53,24 @@ exports.car_detail = function (req, res, next) {
       return next(err)
     }
     console.log(results.car_reservations)
-    res.render('car_detail', {car: results.car, carInstances: results.car_reservations})
+    res.render('car_detail', {car: results.car, carInstances: results.car_reservations, user: req.user})
   })
 }
 
 exports.car_reservation_post = function (req, res) {
-  console.log(req.body)
-  console.log(req.query)
   Car.findById(req.params.id)
     .exec(function (car) {
-      console.log(car)
+      console.log(req.user)
       const reservation = new CarReservation(
-        { car: req.params.id,
+        {
+          user: req.user._id,
+          car: req.params.id,
           reserved_from: req.body.start_date,
           reserved_to: req.body.end_date,
           status: 'Reserved'
         })
       reservation.save(function () {
-        res.render('reservation', { reservation: reservation })
+        res.render('reservation', {reservation: reservation, user: req.user})
       })
     })
 }

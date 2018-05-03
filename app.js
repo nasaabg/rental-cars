@@ -3,9 +3,11 @@ var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
+var session = require('express-session')
 
 var usersRouter = require('./routes/users')
 var carsRouter = require('./routes/cars')
+var authRouter = require('./routes/index')
 
 var app = express()
 
@@ -23,6 +25,9 @@ var db = mongoose.connection
 // Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
+var passport = require('passport')
+var LocalStrategy = require('passport-local').Strategy
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
@@ -30,9 +35,22 @@ app.set('view engine', 'pug')
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(cookieParser())
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
+var User = require('./models/user')
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
+app.use('/', authRouter)
 app.use('/', carsRouter)
 app.use('/users', usersRouter)
 
