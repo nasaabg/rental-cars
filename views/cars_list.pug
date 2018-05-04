@@ -19,9 +19,14 @@ block content
                     | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
                 p
 
-                form(method='POST' action=car.reservation_url)
-                    input#start_date.form-control(type='hidden' name='start_date' value=startDate)
-                    input#end_date.form-control(type='hidden' name='end_date' value=endDate)
+                if (user)
+                    form(method='POST' action=car.reservation_url)
+                        input#start_date.form-control(type='hidden' name='start_date' value=startDate)
+                        input#end_date.form-control(type='hidden' name='end_date' value=endDate)
 
-                    button.btn.btn-default(type='submit') Book now!
-
+                        button.btn.btn-default(type='submit') Book now!
+                if(!user)
+                    h4 Login to book
+                br
+                br
+                br
