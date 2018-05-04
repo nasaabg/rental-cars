@@ -5,8 +5,10 @@ block body
 
     +navbar-fixed("Rental car","navbar","inverse")
         +nav_item("/","active") Home
-        +nav_item("#") Contact
-        +nav_item("/reservations") My reservations
+        if (user && user.admin)
+            +nav_item("/all_reservations") All Reservations
+        if (user)
+            +nav_item("/my_reservations") Reservations
         +nav_item.nav.navbar-nav.navbar-right
         if (!user)
             li

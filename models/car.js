@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-var CarReservation = require('../models/carReservation')
 
 var Schema = mongoose.Schema
 
@@ -23,19 +22,15 @@ CarSchema
   })
 
 CarSchema
-  .virtual('reservation_url')
+  .virtual('img_url')
   .get(function () {
-    return '/cars/' + this._id + '/reservation'
+    return 'https://s3-ap-southeast-2.amazonaws.com/imotor-cms/images_cms/Skoda_Latest_Offers_Opportunity_Link-Jul17-CY.jpg'
   })
 
 CarSchema
-  .virtual('availableFor')
+  .virtual('reservation_url')
   .get(function () {
-    CarReservation.find({'car': this._id})
-      .exec(function (reservations) {
-        console.log(reservations)
-        return reservations
-      })
+    return '/cars/' + this._id + '/reservation'
   })
 
 // Export model

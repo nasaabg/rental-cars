@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    .container
+        .row
+        h2 All Reservations
+        each reservation in reservations
+            .col-md-12
+                h2 User: #{reservation.user.username}
+                h3 Name: #{reservation.car.name}
+                h4 Model: #{reservation.car.model}
+                hr
+                h5 From: #{moment(reservation.reserved_from).format('YYYY-MM-DD')}
+                h5 To: #{moment(reservation.reserved_to).format('YYYY-MM-DD')}
+                h5 Status: #{reservation.status}
+                h5 ID: #{reservation._id}
+                h6 Actions:
+            .col-md-1
+                form(method='POST' action=(reservation.resource_url + '/remove'))
+                    button.btn.btn-danger(type='submit') Cancel
+            if (reservation.status !== "Confirmed")
+                .col-md-1
+                    form(method='POST' action=(reservation.resource_url + '/confirm'))
+                        button.btn.btn-success(type='submit') Confirm
+        br
+        hr
+

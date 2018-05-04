@@ -19,5 +19,10 @@ CarReservationSchema
     return '/catalog/car_reservation/' + this._id
   })
 
+CarReservationSchema
+  .virtual('resource_url')
+  .get(function () {
+    return '/reservations/' + this._id
+  })
 // Export model
 module.exports = mongoose.model('CarReservation', CarReservationSchema)

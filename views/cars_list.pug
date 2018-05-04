@@ -6,9 +6,10 @@ block content
     .container
         .row
         each car in cars
-            .col-md-4
+            .col-md-5
                 h4 Name: #{car.name}
                 h4 Model: #{car.model}
+                img.image(src=car.img_url)
                 hr
                 h4 Vin number: #{car.vin_number}
                 h4 Price per day: $#{car.price_day}

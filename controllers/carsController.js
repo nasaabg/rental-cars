@@ -74,14 +74,3 @@ exports.car_reservation_post = function (req, res) {
       })
     })
 }
-exports.car_create_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Book create POST')
-}
-
-exports.car_delete_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Book delete POST')
-}
-
-exports.car_update_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Book update POST')
-}
